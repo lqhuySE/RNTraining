@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, View} from 'react-native';
+import {Button, View, StyleSheet} from 'react-native';
 
 type ButtonProp = {
   title: String,
@@ -15,3 +15,4 @@ export default class CustomButton extends Component<ButtonProp> {
     );
   }
 }
+
