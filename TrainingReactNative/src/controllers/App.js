@@ -8,7 +8,8 @@
 
 import React from 'react';
 import {
-  Alert, Image,
+  Alert,  
+  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
