@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, View, StyleSheet} from 'react-native';
+import {Button, View} from 'react-native';
 
 type ButtonProp = {
   title: String,
@@ -9,10 +9,9 @@ type ButtonProp = {
 export default class CustomButton extends Component<ButtonProp> {
   render() {
     return (
-      <View>
+      <View style={{marginVertical: 5}}>
         <Button title={this.props.title} onPress={this.props.onClicked} />
       </View>
     );
   }
 }
-

@@ -11,7 +11,6 @@ import TextView from '../components/TextView';
 import Indicator from '../components/Indicator';
 import Button from '../components/Button';
 import ImageFlatList from '../components/ImageFlatList';
-import FlatList from '../components/BasicFlatList';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 function HomePageController() {
@@ -33,6 +32,7 @@ function HomePageController() {
           title={'This is button'}
           onClicked={() => Alert.alert('RN Tutorial', 'Hello world')}
         />
+        <ImageFlatList />
       </ScrollView>
     </SafeAreaView>
   );

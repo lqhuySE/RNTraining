@@ -21,6 +21,7 @@ class CustomInputField extends Component<InputFieldProps> {
       <View>
         <Text style={styles.header}>{this.props.headerTitle}</Text>
         <TextInput
+          style={styles.textInput}
           multiline={this.props.multiline}
           defaultValue={this.state.value}
           placeholder={this.props.placeholder}
@@ -47,5 +48,12 @@ export default CustomInputField;
 const styles = StyleSheet.create({
   header: {
     fontWeight: 'bold',
+  },
+  textInput: {
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginVertical: 5,
+    paddingHorizontal: 10,
   },
 });
