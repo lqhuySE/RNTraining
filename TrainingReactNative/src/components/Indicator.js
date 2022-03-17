@@ -5,7 +5,7 @@ export default class Indicator extends Component {
   render() {
     return (
       <View>
-        <ActivityIndicator />
+        <ActivityIndicator/>
       </View>
     );
   }
