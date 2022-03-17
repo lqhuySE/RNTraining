@@ -1,17 +1,16 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Alert,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
+  Text,
   useColorScheme,
 } from 'react-native';
-import TextView from '../components/TextView';
-import Indicator from '../components/Indicator';
-import Button from '../components/Button';
-import ImageFlatList from '../components/ImageFlatList';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import ShortProfile from '../components/ShortProfile';
+import CustomFlatList from '../components/CustomFlatList';
+import CustomDivider from '../components/CustomDivider';
 
 function HomePageController() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -26,13 +25,9 @@ function HomePageController() {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <TextView title={'This is a text'} />
-        <Indicator />
-        <Button
-          title={'This is button'}
-          onClicked={() => Alert.alert('RN Tutorial', 'Hello world')}
-        />
-        <ImageFlatList />
+        <ShortProfile name={'Future'} />
+        <Text style={styles.header}>Folders</Text>
+        <CustomFlatList />
       </ScrollView>
     </SafeAreaView>
   );
@@ -41,6 +36,7 @@ function HomePageController() {
 const styles = StyleSheet.create({
   sectionContainer: {
     backgroundColor: 'white',
+    margin: 10,
   },
   sectionTitle: {
     fontSize: 24,
@@ -53,6 +49,12 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  header: {
+    fontSize: 35,
+    marginHorizontal: 5,
+    marginVertical: StatusBar.currentHeight,
+    fontWeight: 'bold',
   },
 });
 

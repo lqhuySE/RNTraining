@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -10,6 +10,7 @@ import {
 import CustomInputField from '../components/CustomInputField';
 import CustomButton from '../components/Button';
 import CustomButtonWithImage from '../components/CustomButtonWithImage';
+import CustomDivider from '../components/CustomDivider';
 
 class GoToSignUp extends Component {
   render() {
@@ -68,62 +69,48 @@ class LoginWithThirdParty extends Component {
   }
 }
 
-export default class LoginPageController extends Component {
-  state = {
-    email: 'futurex.honda@gmail.com',
-    password: '',
-  };
+export default function LoginPageController({navigation}) {
+  const [email, setEmail] = useState('example@gmail.com');
+  const [password, setPassword] = useState();
 
-  setEmail = (newValue: string) => {
-    this.setState({email: newValue});
-    console.log(newValue);
-  };
-
-  setPassword = (newValue: String) => {
-    this.setState({password: newValue});
-  };
-
-  moveToHomeScreen = () => {
-    this.props.navigation.navigate('Home');
-  };
-
-  render() {
-    return (
-      <SafeAreaView>
-        <ScrollView
-          style={styles.scrollViewContainer}
-          contentInsetAdjustmentBehavior="automatic">
-          <View>
-            <Text style={styles.title}>Login</Text>
-            <CustomInputField
-              headerTitle={'Email'}
-              valueTitle={this.state.email}
-              placeholder={'Please enter your email'}
-              multiline={false}
-              onTextChange={value => this.setEmail(value)}
-            />
-            <CustomInputField
-              headerTitle={'Password'}
-              valueTitle={this.state.password}
-              placeholder={'Please enter your password'}
-              multiline={true}
-              onTextChange={value => this.setPassword(value)}
-            />
-            <CustomButton title={'Login'} onClicked={this.moveToHomeScreen} />
-            <View style={styles.textBottomContainer}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text>Don't have any account ? </Text>
-                <GoToSignUp />
-              </View>
-              <GoToForgetPassword />
+  return (
+    <SafeAreaView>
+      <ScrollView
+        style={styles.scrollViewContainer}
+        contentInsetAdjustmentBehavior="automatic">
+        <View>
+          <Text style={styles.title}>Login</Text>
+          <CustomInputField
+            headerTitle={'Email'}
+            valueTitle={email}
+            placeholder={'Please enter your email'}
+            multiline={false}
+            onTextChange={value => setEmail(value)}
+          />
+          <CustomInputField
+            headerTitle={'Password'}
+            valueTitle={password}
+            placeholder={'Please enter your password'}
+            multiline={true}
+            onTextChange={value => setPassword(value)}
+          />
+          <CustomButton
+            title={'Login'}
+            onClicked={() => navigation.navigate('Home')}
+          />
+          <View style={styles.textBottomContainer}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text>Don't have any account ? </Text>
+              <GoToSignUp />
             </View>
-            <Divider />
-            <LoginWithThirdParty />
+            <GoToForgetPassword />
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
+          <Divider />
+          <LoginWithThirdParty />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
