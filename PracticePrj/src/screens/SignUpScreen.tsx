@@ -1,6 +1,5 @@
 import React, {Component, useState} from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -9,71 +8,32 @@ import {
 } from 'react-native';
 import CustomInputField from '../components/InputField/CustomInputField';
 import CustomBasicButton from '../components/Button/CustomBasicButton';
-import CustomImageButton from '../components/Button/CustomImageButton';
 
-class GoToSignUp extends Component {
+class GoToSignIn extends Component {
   render() {
     return (
       <View>
         <TouchableWithoutFeedback>
-          <Text style={styles.textButton}>Sign up</Text>
+          <Text style={styles.textButton}>Sign In</Text>
         </TouchableWithoutFeedback>
       </View>
     );
   }
 }
 
-class GoToForgetPassword extends Component {
-  render() {
-    return (
-      <View>
-        <TouchableWithoutFeedback>
-          <Text style={styles.textButton}>Forgot your password ?</Text>
-        </TouchableWithoutFeedback>
-      </View>
-    );
-  }
-}
-
-class Divider extends Component {
-  render() {
-    return (
-      <View style={{flexDirection: 'row', marginVertical: 20}}>
-        <View style={styles.backDivider} />
-        <Text style={{alignSelf: 'center', paddingHorizontal: 5}}>Or</Text>
-        <View style={styles.backDivider} />
-      </View>
-    );
-  }
-}
-
-class LoginWithThirdParty extends Component {
-  render() {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-        }}>
-        <CustomImageButton image={require('../assets/google.png')} />
-        <CustomImageButton image={require('../assets/facebook.png')} />
-      </View>
-    );
-  }
-}
-
-export default function LoginPageController() {
-  const [email, setEmail] = useState('example@gmail.com');
-  const [password, setPassword] = useState('');
+export default function SignUpScreen() {
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Register</Text>
       <CustomInputField
         headerTitle={'Email'}
         valueTitle={email}
         placeholder={'Please enter your email'}
         multiline={false}
+        passwordType={false}
         onTextChange={value => setEmail(value)}
       />
       <CustomInputField
@@ -81,22 +41,28 @@ export default function LoginPageController() {
         valueTitle={password}
         placeholder={'Please enter your password'}
         multiline={false}
+        passwordType={true}
+        onTextChange={value => setPassword(value)}
+      />
+      <CustomInputField
+        headerTitle={'Confirm Password'}
+        valueTitle={password}
+        placeholder={'Please enter your password'}
+        multiline={false}
+        passwordType={true}
         onTextChange={value => setPassword(value)}
       />
       <CustomBasicButton
-        title={'Login'}
+        title={'Register'}
         active={true}
         onClicked={() => Alert.alert('RN', 'This is alert')}
       />
       <View style={styles.textBottomContainer}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Text>Don't have any account ? </Text>
-          <GoToSignUp />
+          <Text>Have an account ? </Text>
+          <GoToSignIn />
         </View>
-        <GoToForgetPassword />
       </View>
-      <Divider />
-      <LoginWithThirdParty />
     </View>
   );
 }
