@@ -12,6 +12,7 @@ import React from 'react';
 import {SafeAreaView, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import LoginPageController from './src/screens/LoginPage';
+import HomePage from './src/screens/HomePage';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -22,7 +23,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={[backgroundStyle, {flex: 1}]}>
-      <LoginPageController />
+      <HomePage />
     </SafeAreaView>
   );
 };
