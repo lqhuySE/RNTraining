@@ -74,6 +74,7 @@ export default function LoginPageController() {
         valueTitle={email}
         placeholder={'Please enter your email'}
         multiline={false}
+        passwordType={false}
         onTextChange={value => setEmail(value)}
       />
       <CustomInputField
@@ -81,6 +82,7 @@ export default function LoginPageController() {
         valueTitle={password}
         placeholder={'Please enter your password'}
         multiline={false}
+        passwordType={true}
         onTextChange={value => setPassword(value)}
       />
       <CustomBasicButton

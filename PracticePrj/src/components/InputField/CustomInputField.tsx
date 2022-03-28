@@ -7,6 +7,7 @@ type InputFieldProps = {
   valueTitle: string;
   placeholder: string;
   multiline: boolean;
+  passwordType: boolean;
   onTextChange: (text: string) => void;
 };
 
@@ -37,6 +38,7 @@ class CustomInputField extends Component<InputFieldProps> {
               isFocus: !this.state.isFocus,
             })
           }
+          secureTextEntry={this.props.passwordType}
         />
         <View />
       </View>
