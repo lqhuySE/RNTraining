@@ -60,7 +60,7 @@ class LoginWithThirdParty extends Component {
   }
 }
 
-export default function LoginScreen() {
+export default function LoginScreen({navigation}: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -70,7 +70,9 @@ export default function LoginScreen() {
     });
   };
 
-  const goToSignUp = () => {};
+  const goToSignUp = () => {
+    navigation.navigate('SignUp');
+  };
 
   return (
     <View style={styles.container}>
