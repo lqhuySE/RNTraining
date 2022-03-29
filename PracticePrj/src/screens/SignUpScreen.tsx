@@ -1,19 +1,18 @@
 import React, {Component, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-  Alert,
-} from 'react-native';
+import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import CustomInputField from '../components/InputField/CustomInputField';
 import CustomBasicButton from '../components/Button/CustomBasicButton';
+import FirebaseAuthUtils from '../utils/FirebaseUtils';
 
-class GoToSignIn extends Component {
+type NavigationProps = {
+  onClicked: (param: any) => void;
+};
+
+class GoToSignIn extends Component<NavigationProps> {
   render() {
     return (
       <View>
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={this.props.onClicked}>
           <Text style={styles.textButton}>Sign In</Text>
         </TouchableWithoutFeedback>
       </View>
@@ -21,9 +20,20 @@ class GoToSignIn extends Component {
   }
 }
 
-export default function SignUpScreen() {
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+export default function SignUpScreen({navigation}: any) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const signUp = () => {
+    FirebaseAuthUtils.signUp(email, password).catch(e => {
+      console.log(e);
+    });
+  };
+
+  const backToSignIn = () => {
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
@@ -46,21 +56,21 @@ export default function SignUpScreen() {
       />
       <CustomInputField
         headerTitle={'Confirm Password'}
-        valueTitle={password}
+        valueTitle={confirmPassword}
         placeholder={'Please enter your password'}
         multiline={false}
         passwordType={true}
-        onTextChange={value => setPassword(value)}
+        onTextChange={value => setConfirmPassword(value)}
       />
       <CustomBasicButton
         title={'Register'}
         active={true}
-        onClicked={() => Alert.alert('RN', 'This is alert')}
+        onClicked={() => signUp()}
       />
       <View style={styles.textBottomContainer}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text>Have an account ? </Text>
-          <GoToSignIn />
+          <GoToSignIn onClicked={() => backToSignIn()} />
         </View>
       </View>
     </View>
