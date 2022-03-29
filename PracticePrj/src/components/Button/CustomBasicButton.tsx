@@ -17,7 +17,7 @@ class BasicButton extends Component<BasicButtonProps> {
             styles.touchableContainer,
             this.props.active ? styles.activeButton : styles.inactiveButton,
           ]}
-          onPress={this.props.onClicked}>
+          onPress={() => this.props.onClicked}>
           <Text style={styles.buttonText}>{this.props.title}</Text>
         </TouchableHighlight>
       </View>

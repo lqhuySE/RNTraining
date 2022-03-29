@@ -1,19 +1,21 @@
 import React, {Component, useState} from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  Alert,
+} from 'react-native';
 import CustomInputField from '../components/InputField/CustomInputField';
 import CustomBasicButton from '../components/Button/CustomBasicButton';
 import CustomImageButton from '../components/Button/CustomImageButton';
-import FirebaseAuthUtils from '../utils/FirebaseUtils';
 
-type NavigationProps = {
-  onClicked: (param: any) => void;
-};
-
-class GoToSignUp extends Component<NavigationProps> {
+class GoToSignUp extends Component {
   render() {
     return (
       <View>
-        <TouchableWithoutFeedback onPress={this.props.onClicked}>
+        <TouchableWithoutFeedback>
           <Text style={styles.textButton}>Sign up</Text>
         </TouchableWithoutFeedback>
       </View>
@@ -60,19 +62,9 @@ class LoginWithThirdParty extends Component {
   }
 }
 
-export default function LoginScreen({navigation}: any) {
-  const [email, setEmail] = useState('');
+export default function LoginPageController() {
+  const [email, setEmail] = useState('example@gmail.com');
   const [password, setPassword] = useState('');
-
-  const signIn = () => {
-    FirebaseAuthUtils.signIn(email, password).catch(e => {
-      console.log(e);
-    });
-  };
-
-  const goToSignUp = () => {
-    navigation.navigate('SignUp');
-  };
 
   return (
     <View style={styles.container}>
@@ -82,7 +74,6 @@ export default function LoginScreen({navigation}: any) {
         valueTitle={email}
         placeholder={'Please enter your email'}
         multiline={false}
-        passwordType={false}
         onTextChange={value => setEmail(value)}
       />
       <CustomInputField
@@ -90,18 +81,17 @@ export default function LoginScreen({navigation}: any) {
         valueTitle={password}
         placeholder={'Please enter your password'}
         multiline={false}
-        passwordType={true}
         onTextChange={value => setPassword(value)}
       />
       <CustomBasicButton
         title={'Login'}
         active={true}
-        onClicked={() => signIn()}
+        onClicked={() => Alert.alert('RN', 'This is alert')}
       />
       <View style={styles.textBottomContainer}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text>Don't have any account ? </Text>
-          <GoToSignUp onClicked={() => goToSignUp()} />
+          <GoToSignUp />
         </View>
         <GoToForgetPassword />
       </View>
