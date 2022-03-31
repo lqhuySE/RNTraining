@@ -16,7 +16,7 @@ class ItemNoteList extends Component<ItemNoteProps> {
           source={require('../../assets/folder.png')}
         />
         <Text style={styles.folderName}>{this.props.name}</Text>
-        {/*<Text style={styles.numberItem}>{this.props.count}</Text>*/}
+        <Text style={styles.numberItem}>{this.props.count}</Text>
         <Image
           style={styles.iconList}
           source={require('../../assets/next.png')}

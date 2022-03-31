@@ -1,13 +1,13 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import FolderItemData from '../../data/FolderItemData';
-import ItemFolderList from '../Custom/ItemFolderList';
+import NoteItemData from '../../data/NoteItemData';
+import ItemNoteList from '../Custom/ItemNoteList';
 
 type ItemClickProps = {
   onItemClickCallback: (id: string) => void;
 };
 
-const FolderList = (props: ItemClickProps) => {
+const NoteList = (props: ItemClickProps) => {
   const onItemClick = (title: string) => {
     props.onItemClickCallback(title);
   };
@@ -15,17 +15,13 @@ const FolderList = (props: ItemClickProps) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={FolderItemData}
+        data={NoteItemData}
         renderItem={({item, index}) => (
           <TouchableOpacity
             style={styles.itemList}
             key={item.id}
             onPress={() => onItemClick(item.title)}>
-            <ItemFolderList
-              name={item.title}
-              count={item.itemCount}
-              index={index}
-            />
+            <ItemNoteList name={item.title} time={item.time} index={index} />
           </TouchableOpacity>
         )}
       />
@@ -43,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FolderList;
+export default NoteList;
