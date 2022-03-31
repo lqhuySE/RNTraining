@@ -52,10 +52,10 @@ class Header extends Component<ButtonProps> {
   }
 }
 
-export default function HomePage() {
+export default function HomePage({navigation}: any) {
   const [isAlertDialogShow, setShowAlertDialog] = useState(false);
   const [isInputDialogShow, setShowInputDialog] = useState(false);
-  const [noteName, setNoteName] = useState('');
+  const [folderName, setFolderName] = useState('');
 
   const showAlertDialog = () => {
     setShowAlertDialog(true);
@@ -73,9 +73,15 @@ export default function HomePage() {
     setShowInputDialog(false);
   };
 
-  const createNewNote = (value: string) => {
-    setNoteName(value);
+  const createNewFolder = (value: string) => {
+    setFolderName(value);
     hideInputDialog();
+  };
+
+  const goToNote = (value: string) => {
+    navigation.navigate('Note', {
+      folderName: value,
+    });
   };
 
   const logout = () => {
@@ -87,12 +93,12 @@ export default function HomePage() {
   return (
     <SafeAreaView style={styles.container}>
       <Header onClicked={() => showAlertDialog()} />
-      <Text style={styles.section}>Folder</Text>
+      <Text style={styles.section}>Folders</Text>
       <ScrollView
         nestedScrollEnabled={true}
         style={styles.scrollViewContainer}
         contentInsetAdjustmentBehavior="automatic">
-        <FolderList onItemClickCallback={value => createNewNote(value)} />
+        <FolderList onItemClickCallback={value => goToNote(value)} />
       </ScrollView>
       <AlertDialog
         isShown={isAlertDialogShow}
@@ -103,10 +109,12 @@ export default function HomePage() {
       />
       <InputDialog
         isShown={isInputDialogShow}
-        title={'New note'}
-        message={'Please enter note name'}
+        title={'New Folder'}
+        message={'Enter a name for this folder'}
+        negativeButtonTitle={'Cancel'}
         negativeCallback={hideInputDialog}
-        positiveCallback={value => createNewNote(value)}
+        positiveButtonTitle={'Save'}
+        positiveCallback={value => createNewFolder(value)}
       />
       <FloatingActionButton onClicked={showInputDialog} />
     </SafeAreaView>

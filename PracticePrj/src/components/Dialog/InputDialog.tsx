@@ -1,36 +1,48 @@
 import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import Dialog from 'react-native-dialog';
 
 type InputDialogProps = {
   isShown: boolean;
   title: string;
   message: string;
+  negativeButtonTitle: string;
   negativeCallback: () => void;
+  positiveButtonTitle: string;
   positiveCallback: (value: string) => void;
 };
 
 const InputDialog = (props: InputDialogProps) => {
   const [value, setValue] = useState<string>('');
 
-  const handleDone = (text: string) => {
-    props.positiveCallback(text);
+  const onPositiveButtonClick = (text: string) => {
+    if (text === '') {
+      Alert.alert('Warning', 'Name of folder is not emptied');
+    } else {
+      props.positiveCallback(text);
+    }
   };
 
-  const handleCancel = () => {
+  const onNegativeButtonClick = () => {
     props.negativeCallback();
   };
 
   return (
     <View style={styles.dialogContainer}>
       <Dialog.Container visible={props.isShown}>
-        <Dialog.Title>{props.title}</Dialog.Title>
+        <Dialog.Title style={styles.title}>{props.title}</Dialog.Title>
         <Dialog.Input
           placeholder={props.message}
           onChangeText={text => setValue(text)}
         />
-        <Dialog.Button label="Cancel" onPress={handleCancel} />
-        <Dialog.Button label="Done" onPress={() => handleDone(value)} />
+        <Dialog.Button
+          label={props.negativeButtonTitle}
+          onPress={onNegativeButtonClick}
+        />
+        <Dialog.Button
+          label={props.positiveButtonTitle}
+          onPress={() => onPositiveButtonClick(value)}
+        />
       </Dialog.Container>
     </View>
   );
@@ -42,6 +54,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  title: {
+    fontWeight: 'bold',
   },
 });
 
