@@ -5,6 +5,8 @@ import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen';
 import {AuthContext} from './AuthProvider';
+import NoteScreen from '../screens/NoteScreen';
+import NoteDetailScreen from '../screens/NoteDetailScreen';
 
 const AuthStack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
@@ -22,6 +24,8 @@ function RootNavigator() {
   return (
     <RootStack.Navigator screenOptions={{headerShown: false}}>
       <RootStack.Screen name="Home" component={HomeScreen} />
+      <RootStack.Screen name="Note" component={NoteScreen} />
+      <RootStack.Screen name="NoteDetail" component={NoteDetailScreen} />
     </RootStack.Navigator>
   );
 }
