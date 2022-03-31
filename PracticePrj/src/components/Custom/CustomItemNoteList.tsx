@@ -16,7 +16,7 @@ class ItemNoteList extends Component<ItemNoteProps> {
           source={require('../../assets/folder.png')}
         />
         <Text style={styles.folderName}>{this.props.name}</Text>
-        <Text style={styles.numberItem}>{this.props.count}</Text>
+        {/*<Text style={styles.numberItem}>{this.props.count}</Text>*/}
         <Image
           style={styles.iconList}
           source={require('../../assets/next.png')}
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: Color.yellow,
+    borderColor: Color.lightBlueW50,
     borderRadius: 5,
     borderWidth: 1,
     padding: 10,

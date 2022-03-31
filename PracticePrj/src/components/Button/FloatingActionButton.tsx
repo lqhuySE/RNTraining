@@ -1,25 +1,21 @@
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import Color from '../../constants/Color';
 
-const actions = [
-  {
-    icon: require('../../assets/new_folder.png'),
-    name: 'bt_accessibility',
-    position: 2,
-  },
-  {
-    icon: require('../../assets/new_file.png'),
-    name: 'bt_language',
-    position: 1,
-  },
-];
+type ImageButtonProps = {
+  onClicked: () => void;
+};
 
-class FloatingActionButton extends Component {
+class ImageButton extends Component<ImageButtonProps> {
   render() {
     return (
       <View style={styles.container}>
-
+        <TouchableOpacity style={styles.button} onPress={this.props.onClicked}>
+          <Image
+            style={styles.image}
+            source={require('../../assets/plus.png')}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -27,10 +23,23 @@ class FloatingActionButton extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    margin: 5,
+    flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginBottom: 20,
+  },
+  button: {
+    borderRadius: 40,
+    backgroundColor: Color.lightBlue,
+    padding: 5,
+    width: 45,
+    height: 45,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+    justifyContent: 'center',
   },
 });
 
-export default FloatingActionButton;
+export default ImageButton;

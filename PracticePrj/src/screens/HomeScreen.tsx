@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-  Button,
 } from 'react-native';
 import CircleImage from '../components/Image/CircleImage';
-import FirebaseAuthUtils from '../utils/FirebaseUtils';
 import FolderList from '../components/Flatlist/FolderList';
-import CustomAlertDialog from '../components/Dialog/CustomAlertDialog';
+import AlertDialog from '../components/Dialog/AlertDialog';
+import FirebaseAuthUtils from '../utils/FirebaseUtils';
+import InputDialog from '../components/Dialog/InputDialog';
+import FloatingActionButton from '../components/Button/FloatingActionButton';
+import Color from '../constants/Color';
 
 type ButtonProps = {
   onClicked: (param: any) => void;
@@ -50,22 +52,10 @@ class Header extends Component<ButtonProps> {
   }
 }
 
-class LoginWithThirdParty extends Component<ButtonProps> {
-  render() {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-        }}>
-        <Button title={'show dialog'} onPress={this.props.onClicked} />
-      </View>
-    );
-  }
-}
-
 export default function HomePage() {
   const [isAlertDialogShow, setShowAlertDialog] = useState(false);
+  const [isInputDialogShow, setShowInputDialog] = useState(false);
+  const [noteName, setNoteName] = useState('');
 
   const showAlertDialog = () => {
     setShowAlertDialog(true);
@@ -75,21 +65,50 @@ export default function HomePage() {
     setShowAlertDialog(false);
   };
 
+  const showInputDialog = () => {
+    setShowInputDialog(true);
+  };
+
+  const hideInputDialog = () => {
+    setShowInputDialog(false);
+  };
+
+  const createNewNote = (value: string) => {
+    setNoteName(value);
+    hideInputDialog();
+  };
+
+  const logout = () => {
+    FirebaseAuthUtils.signOut().catch(e => {
+      console.log(e);
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header onClicked={() => showAlertDialog()} />
-      <Text style={styles.section}>Folders</Text>
+      <Text style={styles.section}>Folder</Text>
       <ScrollView
         nestedScrollEnabled={true}
         style={styles.scrollViewContainer}
         contentInsetAdjustmentBehavior="automatic">
-        <FolderList />
+        <FolderList onItemClickCallback={value => createNewNote(value)} />
       </ScrollView>
-      <LoginWithThirdParty onClicked={() => showAlertDialog()} />
-      <CustomAlertDialog
-        isShowed={isAlertDialogShow}
-        callback={hideAlertDialog}
+      <AlertDialog
+        isShown={isAlertDialogShow}
+        title={'Logging out'}
+        message={'Are you sure, you want to exit ?'}
+        negativeCallback={hideAlertDialog}
+        positiveCallback={logout}
       />
+      <InputDialog
+        isShown={isInputDialogShow}
+        title={'New note'}
+        message={'Please enter note name'}
+        negativeCallback={hideInputDialog}
+        positiveCallback={value => createNewNote(value)}
+      />
+      <FloatingActionButton onClicked={showInputDialog} />
     </SafeAreaView>
   );
 }
@@ -97,7 +116,8 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 10,
+    padding: 10,
+    backgroundColor: Color.white,
   },
   scrollViewContainer: {
     width: '100%',

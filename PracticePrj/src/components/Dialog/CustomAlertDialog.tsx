@@ -1,11 +1,11 @@
-import React, {Component, useState} from 'react';
+import React from 'react';
 import {View, Modal, StyleSheet, Text} from 'react-native';
 import Color from '../../constants/Color';
 import CustomDialogButton from '../Button/CustomDialogButton';
 import FirebaseAuthUtils from '../../utils/FirebaseUtils';
 
 type AlertDialogProps = {
-  isShowed: boolean;
+  isShown: boolean;
   callback: () => void;
 };
 
@@ -25,7 +25,7 @@ const CustomAlertDialog = (props: AlertDialogProps) => {
   };
 
   return (
-    <Modal transparent={true} visible={props.isShowed}>
+    <Modal transparent={true} visible={props.isShown}>
       <View style={styles.dialogContainer}>
         <View style={styles.alertDialog}>
           <Text style={styles.text}>Are you sure, you want to exit ?</Text>

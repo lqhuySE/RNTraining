@@ -44,31 +44,6 @@ const folderNoteItemData = [
     title: 'New folder',
     itemCount: 0,
   },
-  {
-    id: '10',
-    title: 'Fifth folder',
-    itemCount: 0,
-  },
-  {
-    id: '11',
-    title: 'Working',
-    itemCount: 10,
-  },
-  {
-    id: '12',
-    title: 'Note',
-    itemCount: 5,
-  },
-  {
-    id: '13',
-    title: 'Me',
-    itemCount: 2,
-  },
-  {
-    id: '14',
-    title: 'New folder',
-    itemCount: 0,
-  },
 ];
 
 module.exports = folderNoteItemData;
