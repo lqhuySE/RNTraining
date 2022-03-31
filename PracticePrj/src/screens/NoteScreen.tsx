@@ -11,6 +11,7 @@ import {
 import FolderList from '../components/Flatlist/FolderList';
 import Color from '../constants/Color';
 import {useRoute} from '@react-navigation/native';
+import NoteList from '../components/Flatlist/NoteList';
 
 type NavigationProps = {
   title: string;
@@ -71,7 +72,7 @@ export default function NoteScreen({navigation}: any) {
         nestedScrollEnabled={true}
         style={styles.scrollViewContainer}
         contentInsetAdjustmentBehavior="automatic">
-        <FolderList
+        <NoteList
           onItemClickCallback={value =>
             goToNoteDetail(route.params.folderName, value, false)
           }

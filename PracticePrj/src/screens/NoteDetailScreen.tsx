@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     resizeMode: 'stretch',
-    rotation: 180,
+    transform: [{rotate: '180deg'}],
   },
 });
 
