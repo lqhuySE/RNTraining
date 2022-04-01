@@ -21,7 +21,6 @@ const InputDialog = (props: InputDialogProps) => {
     } else {
       setValue(text);
       props.positiveCallback(value);
-      console.log('Input dialog' + value);
     }
   };
 

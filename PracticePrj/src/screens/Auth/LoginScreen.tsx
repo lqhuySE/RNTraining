@@ -1,5 +1,11 @@
 import React, {Component, useState} from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import CustomInputField from '../../components/InputField/CustomInputField';
 import CustomBasicButton from '../../components/Button/CustomBasicButton';
 import CustomImageButton from '../../components/Button/CustomImageButton';
@@ -65,9 +71,13 @@ export default function LoginScreen({navigation}: any) {
   const [password, setPassword] = useState('');
 
   const signIn = () => {
-    FirebaseAuthUtils.signIn(email, password).catch(e => {
-      console.log(e);
-    });
+    if (email === '' && password === '') {
+      Alert.alert('Warning', 'Please enter email and password');
+    } else {
+      FirebaseAuthUtils.signIn(email, password).catch(e => {
+        console.log(e);
+      });
+    }
   };
 
   const goToSignUp = () => {

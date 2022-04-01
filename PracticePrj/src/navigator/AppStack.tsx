@@ -31,7 +31,7 @@ function RootNavigator() {
 }
 
 export default function AppStack() {
-  const {user, isLoading} = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
   return (
     <NavigationContainer>
       {user ? <RootNavigator /> : <AuthNavigator />}

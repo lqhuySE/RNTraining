@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TextInput,
@@ -8,6 +8,8 @@ import {
   Text,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {updateNote} from '../../redux/Actions';
 
 type NavigationProps = {
   title: string;
@@ -28,10 +30,39 @@ const HeaderNavigation = (props: NavigationProps) => {
 const NoteDetailScreen = ({navigation}: any) => {
   const route = useRoute();
 
+  const [title, setTitle] = useState(route.params.title);
+  const [noteValue, setNoteValue] = useState(route.params.note);
+
+  const dispatch = useDispatch();
+
   const backToNote = () => {
     navigation.goBack();
-    //TODO: add save note
+    //saveNote();
   };
+
+  // const getCurrentDate = () => {
+  //   const date = new Date().getDate();
+  //   const month = new Date().getMonth() + 1;
+  //   const year = new Date().getFullYear();
+  //   const hour = new Date().getHours();
+  //   const min = new Date().getMinutes();
+  //   const second = new Date().getSeconds();
+  //
+  //   return (
+  //     date + '/' + month + '/' + year + ' ' + hour + ':' + min + ':' + second
+  //   );
+  // };
+
+  // const saveNote = () => {
+  //   dispatch(
+  //     updateNote({
+  //       id: route.params.id,
+  //       title: title,
+  //       note: noteValue,
+  //       time: getCurrentDate(),
+  //     }),
+  //   );
+  // };
 
   return (
     <View style={styles.container}>
@@ -41,9 +72,16 @@ const NoteDetailScreen = ({navigation}: any) => {
       />
       <TextInput
         style={styles.title}
-        placeholder={route.params.isNewNote ? 'Title' : route.params.noteTitle}
+        value={title}
+        onChangeText={text => setTitle(text)}
       />
-      <TextInput style={styles.note} placeholder={'Note'} multiline={true} />
+      <TextInput
+        style={styles.note}
+        placeholder={'Note'}
+        multiline={true}
+        value={noteValue}
+        onChangeText={text => setNoteValue(text)}
+      />
     </View>
   );
 };

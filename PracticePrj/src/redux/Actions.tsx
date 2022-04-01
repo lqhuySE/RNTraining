@@ -18,3 +18,17 @@ export const addNewFolder = (data: any) => {
     payload: data,
   };
 };
+
+export const addNewNote = (data: any) => {
+  return {
+    type: 'noteList/addNewNote',
+    payload: data,
+  };
+};
+
+export const updateNote = (data: any) => {
+  return {
+    type: 'noteList/updateNote',
+    payload: data,
+  };
+};

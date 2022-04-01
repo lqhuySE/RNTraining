@@ -1,26 +1,26 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import NoteItemData from '../../data/NoteItemData';
 import ItemNoteList from '../Custom/ItemNoteList';
 
 type ItemClickProps = {
-  onItemClickCallback: (id: string) => void;
+  data: any;
+  onItemClickCallback: (id: string, title: string, note: string) => void;
 };
 
 const NoteList = (props: ItemClickProps) => {
-  const onItemClick = (title: string) => {
-    props.onItemClickCallback(title);
+  const onItemClick = (id: string, title: string, note: string) => {
+    props.onItemClickCallback(id, title, note);
   };
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={NoteItemData}
+        data={props.data}
         renderItem={({item, index}) => (
           <TouchableOpacity
             style={styles.itemList}
             key={item.id}
-            onPress={() => onItemClick(item.title)}>
+            onPress={() => onItemClick(item.id, item.title, item.note)}>
             <ItemNoteList name={item.title} time={item.time} index={index} />
           </TouchableOpacity>
         )}
