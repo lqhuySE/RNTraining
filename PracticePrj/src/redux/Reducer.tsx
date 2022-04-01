@@ -18,7 +18,7 @@ const initState = {
     {id: 5, title: 'Note 5', time: '31/03/2022 16:53:00'},
   ],
 };
-const rootReducer = (state = initState, action) => {
+const rootReducer = (state = initState, action: any) => {
   switch (action.type) {
     case 'auth/signIn': {
     }

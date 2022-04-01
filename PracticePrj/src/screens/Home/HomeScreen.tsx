@@ -16,8 +16,8 @@ import InputDialog from '../../components/Dialog/InputDialog';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import Color from '../../constants/Color';
 import {useDispatch, useSelector} from 'react-redux';
-import {folderListSelector} from '../../redux/selector';
-import {addNewFolder} from '../../redux/actions';
+import {folderListSelector} from '../../redux/Selector';
+import {addNewFolder} from '../../redux/Actions';
 import uuid from 'react-native-uuid';
 
 type ButtonProps = {
@@ -59,7 +59,6 @@ class Header extends Component<ButtonProps> {
 export default function HomePage({navigation}: any) {
   const [isAlertDialogShow, setShowAlertDialog] = useState(false);
   const [isInputDialogShow, setShowInputDialog] = useState(false);
-  const [folderName, setFolderName] = useState('');
 
   const dispatch = useDispatch();
 
@@ -88,7 +87,6 @@ export default function HomePage({navigation}: any) {
         title: value,
       }),
     );
-    setFolderName(value);
     hideInputDialog();
   };
 
