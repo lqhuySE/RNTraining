@@ -8,13 +8,17 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
-import CircleImage from '../components/Image/CircleImage';
-import FolderList from '../components/Flatlist/FolderList';
-import AlertDialog from '../components/Dialog/AlertDialog';
-import FirebaseAuthUtils from '../utils/FirebaseUtils';
-import InputDialog from '../components/Dialog/InputDialog';
-import FloatingActionButton from '../components/Button/FloatingActionButton';
-import Color from '../constants/Color';
+import CircleImage from '../../components/Image/CircleImage';
+import FolderList from '../../components/Flatlist/FolderList';
+import AlertDialog from '../../components/Dialog/AlertDialog';
+import FirebaseAuthUtils from '../../utils/FirebaseUtils';
+import InputDialog from '../../components/Dialog/InputDialog';
+import FloatingActionButton from '../../components/Button/FloatingActionButton';
+import Color from '../../constants/Color';
+import {useDispatch, useSelector} from 'react-redux';
+import {folderListSelector} from '../../redux/selector';
+import {addNewFolder} from '../../redux/actions';
+import uuid from 'react-native-uuid';
 
 type ButtonProps = {
   onClicked: (param: any) => void;
@@ -25,7 +29,7 @@ class Avatar extends Component {
     return (
       <View style={styles.avatarContainer}>
         <CircleImage
-          image={require('../assets/user.png')}
+          image={require('../../assets/user.png')}
           size={30}
           isRadius={false}
           radius={40}
@@ -44,7 +48,7 @@ class Header extends Component<ButtonProps> {
         <TouchableOpacity onPress={this.props.onClicked}>
           <Image
             style={styles.image}
-            source={require('../assets/logout.png')}
+            source={require('../../assets/logout.png')}
           />
         </TouchableOpacity>
       </View>
@@ -56,6 +60,10 @@ export default function HomePage({navigation}: any) {
   const [isAlertDialogShow, setShowAlertDialog] = useState(false);
   const [isInputDialogShow, setShowInputDialog] = useState(false);
   const [folderName, setFolderName] = useState('');
+
+  const dispatch = useDispatch();
+
+  const folderList = useSelector(folderListSelector);
 
   const showAlertDialog = () => {
     setShowAlertDialog(true);
@@ -74,6 +82,12 @@ export default function HomePage({navigation}: any) {
   };
 
   const createNewFolder = (value: string) => {
+    dispatch(
+      addNewFolder({
+        id: uuid.v4(),
+        title: value,
+      }),
+    );
     setFolderName(value);
     hideInputDialog();
   };
@@ -98,7 +112,10 @@ export default function HomePage({navigation}: any) {
         nestedScrollEnabled={true}
         style={styles.scrollViewContainer}
         contentInsetAdjustmentBehavior="automatic">
-        <FolderList onItemClickCallback={value => goToNote(value)} />
+        <FolderList
+          data={folderList}
+          onItemClickCallback={value => goToNote(value)}
+        />
       </ScrollView>
       <AlertDialog
         isShown={isAlertDialogShow}

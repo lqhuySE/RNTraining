@@ -8,10 +8,9 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import FolderList from '../components/Flatlist/FolderList';
-import Color from '../constants/Color';
+import Color from '../../constants/Color';
 import {useRoute} from '@react-navigation/native';
-import NoteList from '../components/Flatlist/NoteList';
+import NoteList from '../../components/Flatlist/NoteList';
 
 type NavigationProps = {
   title: string;
@@ -26,7 +25,7 @@ const HeaderNavigation = (props: NavigationProps) => {
   return (
     <View style={styles.headerContainer}>
       <TouchableOpacity onPress={props.onClicked}>
-        <Image style={styles.image} source={require('../assets/next.png')} />
+        <Image style={styles.image} source={require('../../assets/next.png')} />
       </TouchableOpacity>
       <Text style={styles.headerText}>{props.title}</Text>
     </View>
@@ -39,7 +38,7 @@ const NewNote = (props: ButtonProps) => {
       <TouchableOpacity onPress={props.onClicked}>
         <Image
           style={styles.imageButton}
-          source={require('../assets/new_file.png')}
+          source={require('../../assets/new_file.png')}
         />
       </TouchableOpacity>
     </View>

@@ -18,7 +18,7 @@ const HeaderNavigation = (props: NavigationProps) => {
   return (
     <View style={styles.headerContainer}>
       <TouchableOpacity onPress={props.onClicked}>
-        <Image style={styles.image} source={require('../assets/next.png')} />
+        <Image style={styles.image} source={require('../../assets/next.png')} />
       </TouchableOpacity>
       <Text style={styles.headerText}>{props.title}</Text>
     </View>
