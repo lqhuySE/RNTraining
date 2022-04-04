@@ -1,26 +1,62 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/Auth/LoginScreen';
 import SignUpScreen from '../screens/Auth/SignUpScreen';
 import HomeScreen from '../screens/Home/HomeScreen';
 import {AuthContext} from './AuthProvider';
-import NoteScreen from '../screens/Note/NoteScreen';
 import NoteDetailScreen from '../screens/NoteDetail/NoteDetailScreen';
+import OnboardingScreen from '../screens/OnBoarding/OnBoardingScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthStack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
 
-function AuthNavigator() {
+const AuthNavigator = () => {
+  let routeName: string;
+  const [isFirstLaunch, setIsFirstLaunch] = useState<any>(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem('alreadyLaunched').then(value => {
+      if (value == null) {
+        AsyncStorage.setItem('alreadyLaunched', 'true');
+        setIsFirstLaunch(true);
+      } else {
+        setIsFirstLaunch(false);
+      }
+    });
+
+    return () => {
+      isFirstLaunch;
+    };
+  }, [isFirstLaunch]);
+
+  if (isFirstLaunch === null) {
+    return null;
+  } else if (isFirstLaunch === true) {
+    routeName = 'Onboarding';
+  } else {
+    routeName = 'Login';
+  }
+
   return (
-    <AuthStack.Navigator screenOptions={{headerShown: false}}>
-      <AuthStack.Screen name="Login" component={LoginScreen} />
+    <AuthStack.Navigator initialRouteName={routeName}>
+      <AuthStack.Screen
+        name="Onboarding"
+        component={OnboardingScreen}
+        options={{header: () => null}}
+      />
+      <AuthStack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{header: () => null}}
+      />
       <AuthStack.Screen name="SignUp" component={SignUpScreen} />
     </AuthStack.Navigator>
   );
-}
+};
 
-function RootNavigator() {
+const RootNavigator = () => {
   return (
     <RootStack.Navigator screenOptions={{headerShown: false}}>
       <RootStack.Screen name="Home" component={HomeScreen} />
@@ -28,7 +64,7 @@ function RootNavigator() {
       <RootStack.Screen name="NoteDetail" component={NoteDetailScreen} />
     </RootStack.Navigator>
   );
-}
+};
 
 export default function AppStack() {
   const {user} = useContext(AuthContext);
