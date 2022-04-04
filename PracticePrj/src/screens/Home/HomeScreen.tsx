@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -59,9 +59,10 @@ class Header extends Component<ButtonProps> {
 }
 
 export default function HomePage({navigation}: any) {
+  const ref = firestore().collection('Users');
+
   const [isAlertDialogShow, setShowAlertDialog] = useState(false);
   const [isInputDialogShow, setShowInputDialog] = useState(false);
-  // const [noteId, setNoteId] = useState('');
 
   const dispatch = useDispatch();
 
