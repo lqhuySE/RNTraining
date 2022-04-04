@@ -17,6 +17,7 @@ import {addNewNote} from '../../redux/Actions';
 import InputDialog from '../../components/Dialog/InputDialog';
 import {useDispatch} from 'react-redux';
 import uuid from 'react-native-uuid';
+import DateUtils from '../../utils/DateUtils';
 
 type NavigationProps = {
   title: string;
@@ -70,19 +71,6 @@ export default function NoteScreen({navigation}: any) {
     setShowInputDialog(false);
   };
 
-  const getCurrentDate = () => {
-    const date = new Date().getDate();
-    const month = new Date().getMonth() + 1;
-    const year = new Date().getFullYear();
-    const hour = new Date().getHours();
-    const min = new Date().getMinutes();
-    const second = new Date().getSeconds();
-
-    return (
-      date + '/' + month + '/' + year + ' ' + hour + ':' + min + ':' + second
-    );
-  };
-
   const createUUID = () => {
     return uuid.v4();
   };
@@ -92,7 +80,7 @@ export default function NoteScreen({navigation}: any) {
       addNewNote({
         id: createUUID(),
         title: noteTitle,
-        time: getCurrentDate(),
+        time: DateUtils.getCurrentDateTime(),
         note: '',
       }),
     );

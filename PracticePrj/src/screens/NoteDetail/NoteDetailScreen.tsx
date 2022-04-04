@@ -6,23 +6,35 @@ import {
   TouchableOpacity,
   Image,
   Text,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import {updateNote} from '../../redux/Actions';
+import noteListSlice from '../../screens/Home/noteSlice';
+import DateUtils from '../../utils/DateUtils';
+import Color from '../../constants/Color';
 
 type NavigationProps = {
   title: string;
-  onClicked: (param: any) => void;
+  onBackButtonClicked: (param: any) => void;
+  onSaveButtonClicked: (param: any) => void;
 };
 
 const HeaderNavigation = (props: NavigationProps) => {
   return (
     <View style={styles.headerContainer}>
-      <TouchableOpacity onPress={props.onClicked}>
-        <Image style={styles.image} source={require('../../assets/next.png')} />
-      </TouchableOpacity>
-      <Text style={styles.headerText}>{props.title}</Text>
+      <View style={styles.backButtonContainer}>
+        <TouchableOpacity onPress={props.onBackButtonClicked}>
+          <Image
+            style={styles.image}
+            source={require('../../assets/next.png')}
+          />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>{props.title}</Text>
+      </View>
+      <TouchableWithoutFeedback onPress={props.onSaveButtonClicked}>
+        <Text style={styles.textButton}>SAVE</Text>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -30,45 +42,33 @@ const HeaderNavigation = (props: NavigationProps) => {
 const NoteDetailScreen = ({navigation}: any) => {
   const route = useRoute();
 
-  const [title, setTitle] = useState(route.params.title);
-  const [noteValue, setNoteValue] = useState(route.params.note);
+  const [title, setTitle] = useState(route.params.noteTitle);
+  const [noteValue, setNoteValue] = useState(route.params.noteData);
 
   const dispatch = useDispatch();
 
   const backToNote = () => {
     navigation.goBack();
-    //saveNote();
   };
 
-  // const getCurrentDate = () => {
-  //   const date = new Date().getDate();
-  //   const month = new Date().getMonth() + 1;
-  //   const year = new Date().getFullYear();
-  //   const hour = new Date().getHours();
-  //   const min = new Date().getMinutes();
-  //   const second = new Date().getSeconds();
-  //
-  //   return (
-  //     date + '/' + month + '/' + year + ' ' + hour + ':' + min + ':' + second
-  //   );
-  // };
-
-  // const saveNote = () => {
-  //   dispatch(
-  //     updateNote({
-  //       id: route.params.id,
-  //       title: title,
-  //       note: noteValue,
-  //       time: getCurrentDate(),
-  //     }),
-  //   );
-  // };
+  const saveNote = () => {
+    console.log('Title' + title + 'note' + noteValue);
+    dispatch(
+      noteListSlice.actions.updateNote({
+        id: route.params.noteId,
+        title: title,
+        data: noteValue,
+        time: DateUtils.getCurrentDateTime(),
+      }),
+    );
+  };
 
   return (
     <View style={styles.container}>
       <HeaderNavigation
-        title={route.params.folderName}
-        onClicked={() => backToNote()}
+        title="Notes"
+        onBackButtonClicked={() => backToNote()}
+        onSaveButtonClicked={() => saveNote()}
       />
       <TextInput
         style={styles.title}
@@ -111,6 +111,22 @@ const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'stretch',
     transform: [{rotate: '180deg'}],
+  },
+  backButtonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textButtonContainer: {
+    flex: 1,
+    alignContent: 'flex-end',
+    justifyContent: 'center',
+  },
+  textButton: {
+    color: Color.lightGreen,
+    fontSize: 15,
+    marginHorizontal: 20,
+    fontWeight: 'bold',
   },
 });
 

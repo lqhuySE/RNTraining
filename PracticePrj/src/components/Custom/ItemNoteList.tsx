@@ -1,28 +1,82 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import Color from '../../constants/Color';
+import CustomImageButtonWithoutBorder from '../Button/CustomImageButtonWithoutBorder';
+import {useDispatch} from 'react-redux';
+import noteListSlice from '../../screens/Home/noteSlice';
+import DateUtils from '../../utils/DateUtils';
+import InputDialog from '../Dialog/InputDialog';
 type ItemNoteProps = {
-  name: String;
-  time: String;
+  id: string;
+  name: string;
+  time: string;
   index: Number;
 };
 
-class ItemNoteList extends Component<ItemNoteProps> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Image
-          style={styles.iconList}
-          source={require('../../assets/note.png')}
-        />
-        <View style={styles.textContainer}>
-          <Text style={styles.noteName}>{this.props.name}</Text>
-          <Text>{this.props.time}</Text>
-        </View>
-      </View>
+const ItemNoteList = (props: ItemNoteProps) => {
+  const [isInputDialogShow, setShowInputDialog] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const deleteItem = () => {
+    console.log(props.index);
+    dispatch(
+      noteListSlice.actions.deleteNote({
+        index: props.index,
+      }),
     );
-  }
-}
+  };
+
+  const updateItemList = (noteTitle: string) => {
+    dispatch(
+      noteListSlice.actions.updateNote({
+        id: props.id,
+        title: noteTitle,
+        time: DateUtils.getCurrentDateTime(),
+        data: '',
+      }),
+    );
+    hideInputDialog();
+  };
+
+  const showInputDialog = () => {
+    setShowInputDialog(true);
+  };
+
+  const hideInputDialog = () => {
+    setShowInputDialog(false);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Image
+        style={styles.iconList}
+        source={require('../../assets/note.png')}
+      />
+      <View style={styles.textContainer}>
+        <Text style={styles.noteName}>{props.name}</Text>
+        <Text>{props.time}</Text>
+      </View>
+      <InputDialog
+        isShown={isInputDialogShow}
+        title={'New Note'}
+        message={props.name}
+        negativeButtonTitle={'Cancel'}
+        negativeCallback={hideInputDialog}
+        positiveButtonTitle={'Save'}
+        positiveCallback={noteTitle => updateItemList(noteTitle)}
+      />
+      <CustomImageButtonWithoutBorder
+        image={require('../../assets/edit.png')}
+        onClicked={() => showInputDialog()}
+      />
+      <CustomImageButtonWithoutBorder
+        image={require('../../assets/delete.png')}
+        onClicked={() => deleteItem()}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

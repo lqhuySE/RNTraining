@@ -9,16 +9,18 @@ import {
   SafeAreaView,
 } from 'react-native';
 import CircleImage from '../../components/Image/CircleImage';
-import FolderList from '../../components/Flatlist/FolderList';
 import AlertDialog from '../../components/Dialog/AlertDialog';
 import FirebaseAuthUtils from '../../utils/FirebaseUtils';
 import InputDialog from '../../components/Dialog/InputDialog';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import Color from '../../constants/Color';
 import {useDispatch, useSelector} from 'react-redux';
-import {folderListSelector} from '../../redux/Selector';
-import {addNewFolder} from '../../redux/Actions';
+import {noteListSelector} from '../../redux/Selector';
 import uuid from 'react-native-uuid';
+import NoteList from '../../components/Flatlist/NoteList';
+import DateUtils from '../../utils/DateUtils';
+import noteListSlice from './noteSlice';
+import firestore from '@react-native-firebase/firestore';
 
 type ButtonProps = {
   onClicked: (param: any) => void;
@@ -59,10 +61,11 @@ class Header extends Component<ButtonProps> {
 export default function HomePage({navigation}: any) {
   const [isAlertDialogShow, setShowAlertDialog] = useState(false);
   const [isInputDialogShow, setShowInputDialog] = useState(false);
+  // const [noteId, setNoteId] = useState('');
 
   const dispatch = useDispatch();
 
-  const folderList = useSelector(folderListSelector);
+  const noteList = useSelector(noteListSelector);
 
   const showAlertDialog = () => {
     setShowAlertDialog(true);
@@ -80,39 +83,51 @@ export default function HomePage({navigation}: any) {
     setShowInputDialog(false);
   };
 
-  const createNewFolder = (value: string) => {
-    dispatch(
-      addNewFolder({
-        id: uuid.v4(),
-        title: value,
-      }),
-    );
-    hideInputDialog();
-  };
-
-  const goToNote = (value: string) => {
-    navigation.navigate('Note', {
-      folderName: value,
-    });
-  };
-
   const logout = () => {
     FirebaseAuthUtils.signOut().catch(e => {
       console.log(e);
     });
   };
 
+  const createNewNote = (noteTitle: string) => {
+    dispatch(
+      noteListSlice.actions.addNewNote({
+        id: uuid.v4(),
+        title: noteTitle,
+        time: DateUtils.getCurrentDateTime(),
+        note: '',
+      }),
+    );
+    hideInputDialog();
+  };
+
+  const goToNoteDetail = (
+    id: string,
+    title: string,
+    time: string,
+    data: string,
+  ) => {
+    navigation.navigate('NoteDetail', {
+      noteId: id,
+      noteTitle: title,
+      timeModify: time,
+      noteData: data,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header onClicked={() => showAlertDialog()} />
-      <Text style={styles.section}>Folders</Text>
+      <Text style={styles.section}>Notes</Text>
       <ScrollView
         nestedScrollEnabled={true}
         style={styles.scrollViewContainer}
         contentInsetAdjustmentBehavior="automatic">
-        <FolderList
-          data={folderList}
-          onItemClickCallback={value => goToNote(value)}
+        <NoteList
+          noteList={noteList}
+          onItemClickCallback={(id, title, timeModify, data) =>
+            goToNoteDetail(id, title, timeModify, data)
+          }
         />
       </ScrollView>
       <AlertDialog
@@ -124,12 +139,12 @@ export default function HomePage({navigation}: any) {
       />
       <InputDialog
         isShown={isInputDialogShow}
-        title={'New Folder'}
-        message={'Enter a name for this folder'}
+        title={'New Note'}
+        message={'Enter a name for this note'}
         negativeButtonTitle={'Cancel'}
         negativeCallback={hideInputDialog}
         positiveButtonTitle={'Save'}
-        positiveCallback={value => createNewFolder(value)}
+        positiveCallback={noteTitle => createNewNote(noteTitle)}
       />
       <FloatingActionButton onClicked={showInputDialog} />
     </SafeAreaView>
