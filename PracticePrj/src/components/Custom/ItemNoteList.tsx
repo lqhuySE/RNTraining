@@ -6,6 +6,7 @@ import {useDispatch} from 'react-redux';
 import noteListSlice from '../../screens/Home/noteSlice';
 import DateUtils from '../../utils/DateUtils';
 import InputDialog from '../Dialog/InputDialog';
+import firestore from '@react-native-firebase/firestore';
 type ItemNoteProps = {
   id: string;
   name: string;
@@ -15,6 +16,8 @@ type ItemNoteProps = {
 
 const ItemNoteList = (props: ItemNoteProps) => {
   const [isInputDialogShow, setShowInputDialog] = useState(false);
+
+  const ref = firestore().collection('users');
 
   const dispatch = useDispatch();
 
@@ -27,16 +30,35 @@ const ItemNoteList = (props: ItemNoteProps) => {
     );
   };
 
-  const updateItemList = (noteTitle: string) => {
-    dispatch(
-      noteListSlice.actions.updateNote({
-        id: props.id,
+  // const updateItemList = (noteTitle: string) => {
+  //   dispatch(
+  //     noteListSlice.actions.updateNote({
+  //       id: props.id,
+  //       title: noteTitle,
+  //       time: DateUtils.getCurrentDateTime(),
+  //       data: '',
+  //     }),
+  //   );
+  //   hideInputDialog();
+  // };
+
+  const updateNoteList = (noteTitle: string) => {
+    ref
+      .doc(props.id)
+      .update({
         title: noteTitle,
         time: DateUtils.getCurrentDateTime(),
         data: '',
-      }),
-    );
+      })
+      .then(() => console.log('Done'));
     hideInputDialog();
+  };
+
+  const removeItemNoteList = () => {
+    ref
+      .doc(props.id)
+      .delete()
+      .then(() => console.log('Deleted'));
   };
 
   const showInputDialog = () => {
@@ -64,7 +86,7 @@ const ItemNoteList = (props: ItemNoteProps) => {
         negativeButtonTitle={'Cancel'}
         negativeCallback={hideInputDialog}
         positiveButtonTitle={'Save'}
-        positiveCallback={noteTitle => updateItemList(noteTitle)}
+        positiveCallback={noteTitle => updateNoteList(noteTitle)}
       />
       <CustomImageButtonWithoutBorder
         image={require('../../assets/edit.png')}
@@ -72,7 +94,7 @@ const ItemNoteList = (props: ItemNoteProps) => {
       />
       <CustomImageButtonWithoutBorder
         image={require('../../assets/delete.png')}
-        onClicked={() => deleteItem()}
+        onClicked={() => removeItemNoteList()}
       />
     </View>
   );

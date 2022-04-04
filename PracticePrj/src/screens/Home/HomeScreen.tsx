@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -15,12 +15,13 @@ import InputDialog from '../../components/Dialog/InputDialog';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import Color from '../../constants/Color';
 import {useDispatch, useSelector} from 'react-redux';
-import {noteListSelector} from '../../redux/Selector';
+//import {noteListSelector} from '../../redux/Selector';
 import uuid from 'react-native-uuid';
 import NoteList from '../../components/Flatlist/NoteList';
 import DateUtils from '../../utils/DateUtils';
-import noteListSlice from './noteSlice';
+//import noteListSlice from './noteSlice';
 import firestore from '@react-native-firebase/firestore';
+import INote from '../../models/INote';
 
 type ButtonProps = {
   onClicked: (param: any) => void;
@@ -61,11 +62,29 @@ class Header extends Component<ButtonProps> {
 export default function HomePage({navigation}: any) {
   const [isAlertDialogShow, setShowAlertDialog] = useState(false);
   const [isInputDialogShow, setShowInputDialog] = useState(false);
-  // const [noteId, setNoteId] = useState('');
+  const [list, setList] = useState<INote>([]);
+
+  const ref = firestore().collection('users');
 
   const dispatch = useDispatch();
 
-  const noteList = useSelector(noteListSelector);
+  useEffect(() => {
+    return ref.onSnapshot(documentSnapshot => {
+      const listNote = [] as INote[];
+      documentSnapshot.forEach(doc => {
+        listNote.push({
+          id: doc.id,
+          title: doc.data().title,
+          time: doc.data().time,
+          data: doc.data().data,
+        });
+      });
+      setList(listNote);
+      console.log(list);
+    });
+  }, [dispatch, list, ref]);
+
+  //const noteList = useSelector(noteListSelector);
 
   const showAlertDialog = () => {
     setShowAlertDialog(true);
@@ -89,15 +108,25 @@ export default function HomePage({navigation}: any) {
     });
   };
 
-  const createNewNote = (noteTitle: string) => {
-    dispatch(
-      noteListSlice.actions.addNewNote({
-        id: uuid.v4(),
-        title: noteTitle,
-        time: DateUtils.getCurrentDateTime(),
-        note: '',
-      }),
-    );
+  // const createNewNote = (noteTitle: string) => {
+  //   dispatch(
+  //     noteListSlice.actions.addNewNote({
+  //       id: uuid.v4(),
+  //       title: noteTitle,
+  //       time: DateUtils.getCurrentDateTime(),
+  //       note: '',
+  //     }),
+  //   );
+  //   hideInputDialog();
+  // };
+
+  const addNewNote = (noteTitle: string) => {
+    let noteId: string = `${uuid.v4()}`;
+    ref.doc(`${noteId}`).set({
+      title: noteTitle,
+      time: DateUtils.getCurrentDateTime(),
+      data: '',
+    });
     hideInputDialog();
   };
 
@@ -124,7 +153,7 @@ export default function HomePage({navigation}: any) {
         style={styles.scrollViewContainer}
         contentInsetAdjustmentBehavior="automatic">
         <NoteList
-          noteList={noteList}
+          noteList={list}
           onItemClickCallback={(id, title, timeModify, data) =>
             goToNoteDetail(id, title, timeModify, data)
           }
@@ -144,7 +173,7 @@ export default function HomePage({navigation}: any) {
         negativeButtonTitle={'Cancel'}
         negativeCallback={hideInputDialog}
         positiveButtonTitle={'Save'}
-        positiveCallback={noteTitle => createNewNote(noteTitle)}
+        positiveCallback={noteTitle => addNewNote(noteTitle)}
       />
       <FloatingActionButton onClicked={showInputDialog} />
     </SafeAreaView>

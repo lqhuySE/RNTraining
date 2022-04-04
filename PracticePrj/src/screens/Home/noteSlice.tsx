@@ -1,12 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
+import INote from '../../models/INote';
 
 export default createSlice({
   name: 'noteList',
-  initialState: [
-    {id: 1, title: 'Note 1', time: '31/03/2022 16:53:00', data: ''},
-    {id: 2, title: 'Note 2', time: '31/03/2022 16:53:00', data: ''},
-  ],
+  initialState: [] as INote[],
   reducers: {
+    addNoteList: (state, action) => {
+      state.length = 0;
+      state.push(action.payload);
+    },
     addNewNote: (state, action) => {
       state.push(action.payload);
     },

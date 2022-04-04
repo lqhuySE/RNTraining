@@ -13,6 +13,7 @@ import {useDispatch} from 'react-redux';
 import noteListSlice from '../../screens/Home/noteSlice';
 import DateUtils from '../../utils/DateUtils';
 import Color from '../../constants/Color';
+import firestore from '@react-native-firebase/firestore';
 
 type NavigationProps = {
   title: string;
@@ -41,6 +42,7 @@ const HeaderNavigation = (props: NavigationProps) => {
 
 const NoteDetailScreen = ({navigation}: any) => {
   const route = useRoute();
+  const ref = firestore().collection('users');
 
   const [title, setTitle] = useState(route.params.noteTitle);
   const [noteValue, setNoteValue] = useState(route.params.noteData);
@@ -51,16 +53,27 @@ const NoteDetailScreen = ({navigation}: any) => {
     navigation.goBack();
   };
 
-  const saveNote = () => {
-    console.log('Title' + title + 'note' + noteValue);
-    dispatch(
-      noteListSlice.actions.updateNote({
-        id: route.params.noteId,
+  // const saveNote = () => {
+  //   console.log('Title' + title + 'note' + noteValue);
+  //   dispatch(
+  //     noteListSlice.actions.updateNote({
+  //       id: route.params.noteId,
+  //       title: title,
+  //       data: noteValue,
+  //       time: DateUtils.getCurrentDateTime(),
+  //     }),
+  //   );
+  // };
+
+  const updateNoteDetail = () => {
+    ref
+      .doc(route.params.noteId)
+      .update({
         title: title,
-        data: noteValue,
         time: DateUtils.getCurrentDateTime(),
-      }),
-    );
+        data: noteValue,
+      })
+      .then(() => console.log('Done'));
   };
 
   return (
@@ -68,7 +81,7 @@ const NoteDetailScreen = ({navigation}: any) => {
       <HeaderNavigation
         title="Notes"
         onBackButtonClicked={() => backToNote()}
-        onSaveButtonClicked={() => saveNote()}
+        onSaveButtonClicked={() => updateNoteDetail()}
       />
       <TextInput
         style={styles.title}
