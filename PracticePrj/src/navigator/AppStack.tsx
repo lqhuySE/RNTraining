@@ -1,12 +1,12 @@
 import React, {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from '../screens/LoginScreen';
-import SignUpScreen from '../screens/SignUpScreen';
-import HomeScreen from '../screens/HomeScreen';
+import LoginScreen from '../screens/Auth/LoginScreen';
+import SignUpScreen from '../screens/Auth/SignUpScreen';
+import HomeScreen from '../screens/Home/HomeScreen';
 import {AuthContext} from './AuthProvider';
-import NoteScreen from '../screens/NoteScreen';
-import NoteDetailScreen from '../screens/NoteDetailScreen';
+import NoteScreen from '../screens/Note/NoteScreen';
+import NoteDetailScreen from '../screens/NoteDetail/NoteDetailScreen';
 
 const AuthStack = createNativeStackNavigator();
 const RootStack = createNativeStackNavigator();
@@ -24,14 +24,14 @@ function RootNavigator() {
   return (
     <RootStack.Navigator screenOptions={{headerShown: false}}>
       <RootStack.Screen name="Home" component={HomeScreen} />
-      <RootStack.Screen name="Note" component={NoteScreen} />
+      {/*<RootStack.Screen name="Note" component={NoteScreen} />*/}
       <RootStack.Screen name="NoteDetail" component={NoteDetailScreen} />
     </RootStack.Navigator>
   );
 }
 
 export default function AppStack() {
-  const {user, isLoading} = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
   return (
     <NavigationContainer>
       {user ? <RootNavigator /> : <AuthNavigator />}

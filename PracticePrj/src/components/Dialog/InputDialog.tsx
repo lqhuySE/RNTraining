@@ -9,7 +9,7 @@ type InputDialogProps = {
   negativeButtonTitle: string;
   negativeCallback: () => void;
   positiveButtonTitle: string;
-  positiveCallback: (value: string) => void;
+  positiveCallback: (text: string) => void;
 };
 
 const InputDialog = (props: InputDialogProps) => {
@@ -19,7 +19,8 @@ const InputDialog = (props: InputDialogProps) => {
     if (text === '') {
       Alert.alert('Warning', 'Name of folder is not emptied');
     } else {
-      props.positiveCallback(text);
+      setValue(text);
+      props.positiveCallback(value);
     }
   };
 

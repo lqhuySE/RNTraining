@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -8,10 +8,16 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import FolderList from '../components/Flatlist/FolderList';
-import Color from '../constants/Color';
+import Color from '../../constants/Color';
 import {useRoute} from '@react-navigation/native';
-import NoteList from '../components/Flatlist/NoteList';
+import NoteList from '../../components/Flatlist/NoteList';
+import {useSelector} from 'react-redux';
+import {noteListSelector} from '../../redux/Selector';
+import {addNewNote} from '../../redux/Actions';
+import InputDialog from '../../components/Dialog/InputDialog';
+import {useDispatch} from 'react-redux';
+import uuid from 'react-native-uuid';
+import DateUtils from '../../utils/DateUtils';
 
 type NavigationProps = {
   title: string;
@@ -26,7 +32,7 @@ const HeaderNavigation = (props: NavigationProps) => {
   return (
     <View style={styles.headerContainer}>
       <TouchableOpacity onPress={props.onClicked}>
-        <Image style={styles.image} source={require('../assets/next.png')} />
+        <Image style={styles.image} source={require('../../assets/next.png')} />
       </TouchableOpacity>
       <Text style={styles.headerText}>{props.title}</Text>
     </View>
@@ -39,7 +45,7 @@ const NewNote = (props: ButtonProps) => {
       <TouchableOpacity onPress={props.onClicked}>
         <Image
           style={styles.imageButton}
-          source={require('../assets/new_file.png')}
+          source={require('../../assets/new_file.png')}
         />
       </TouchableOpacity>
     </View>
@@ -47,17 +53,46 @@ const NewNote = (props: ButtonProps) => {
 };
 
 export default function NoteScreen({navigation}: any) {
+  const [isInputDialogShow, setShowInputDialog] = useState(false);
+  // const [noteId, setNoteId] = useState();
+  // const [noteData, setNoteData] = useState('');
+
   const route = useRoute();
 
-  const goToNoteDetail = (
-    folderName: string,
-    noteTitle: string,
-    isNewNote: boolean,
-  ) => {
+  const dispatch = useDispatch();
+
+  const noteList = useSelector(noteListSelector);
+
+  const showInputDialog = () => {
+    setShowInputDialog(true);
+  };
+
+  const hideInputDialog = () => {
+    setShowInputDialog(false);
+  };
+
+  const createUUID = () => {
+    return uuid.v4();
+  };
+
+  const createNewNote = (noteTitle: string) => {
+    dispatch(
+      addNewNote({
+        id: createUUID(),
+        title: noteTitle,
+        time: DateUtils.getCurrentDateTime(),
+        note: '',
+      }),
+    );
+    goToNoteDetail(route.params.folderName, noteTitle, '');
+    hideInputDialog();
+  };
+
+  const goToNoteDetail = (folderName: string, title: string, data: string) => {
     navigation.navigate('NoteDetail', {
       folderName: folderName,
-      noteTitle: noteTitle,
-      isNewNote: isNewNote,
+      title: title,
+      data: data,
     });
   };
 
@@ -73,14 +108,22 @@ export default function NoteScreen({navigation}: any) {
         style={styles.scrollViewContainer}
         contentInsetAdjustmentBehavior="automatic">
         <NoteList
-          onItemClickCallback={value =>
-            goToNoteDetail(route.params.folderName, value, false)
+          data={noteList}
+          onItemClickCallback={(id, title, note) =>
+            goToNoteDetail(route.params.folderName, title, note)
           }
         />
       </ScrollView>
-      <NewNote
-        onClicked={() => goToNoteDetail(route.params.folderName, '', true)}
+      <InputDialog
+        isShown={isInputDialogShow}
+        title={'New Note'}
+        message={'Enter a name for this note'}
+        negativeButtonTitle={'Cancel'}
+        negativeCallback={hideInputDialog}
+        positiveButtonTitle={'Save'}
+        positiveCallback={noteTitle => createNewNote(noteTitle)}
       />
+      <NewNote onClicked={() => showInputDialog()} />
     </SafeAreaView>
   );
 }

@@ -1,9 +1,15 @@
 import React, {Component, useState} from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import CustomInputField from '../components/InputField/CustomInputField';
-import CustomBasicButton from '../components/Button/CustomBasicButton';
-import CustomImageButton from '../components/Button/CustomImageButton';
-import FirebaseAuthUtils from '../utils/FirebaseUtils';
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import CustomInputField from '../../components/InputField/CustomInputField';
+import CustomBasicButton from '../../components/Button/CustomBasicButton';
+import CustomImageButton from '../../components/Button/CustomImageButton';
+import FirebaseAuthUtils from '../../utils/FirebaseUtils';
 
 type NavigationProps = {
   onClicked: (param: any) => void;
@@ -53,8 +59,8 @@ class LoginWithThirdParty extends Component {
           flexDirection: 'row',
           justifyContent: 'center',
         }}>
-        <CustomImageButton image={require('../assets/google.png')} />
-        <CustomImageButton image={require('../assets/facebook.png')} />
+        <CustomImageButton image={require('../../assets/google.png')} />
+        <CustomImageButton image={require('../../assets/facebook.png')} />
       </View>
     );
   }
@@ -65,9 +71,13 @@ export default function LoginScreen({navigation}: any) {
   const [password, setPassword] = useState('');
 
   const signIn = () => {
-    FirebaseAuthUtils.signIn(email, password).catch(e => {
-      console.log(e);
-    });
+    if (email === '' && password === '') {
+      Alert.alert('Warning', 'Please enter email and password');
+    } else {
+      FirebaseAuthUtils.signIn(email, password).catch(e => {
+        console.log(e);
+      });
+    }
   };
 
   const goToSignUp = () => {

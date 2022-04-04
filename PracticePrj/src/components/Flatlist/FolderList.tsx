@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import FolderItemData from '../../data/FolderItemData';
 import ItemFolderList from '../Custom/ItemFolderList';
 
 type ItemClickProps = {
+  data: any;
   onItemClickCallback: (id: string) => void;
 };
 
@@ -15,7 +15,7 @@ const FolderList = (props: ItemClickProps) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={FolderItemData}
+        data={props.data}
         renderItem={({item, index}) => (
           <TouchableOpacity
             style={styles.itemList}
