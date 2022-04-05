@@ -14,7 +14,7 @@ export const signUpValidationSchema = yup.object().shape({
     //   /[!@#$%^&*()\-_"=+{}; :,<.>]/,
     //   'Password must have a special character',
     // )
-    .min(8, ({min}) => `Passowrd must be at least ${min} characters`)
+    .min(5, ({min}) => `Passowrd must be at least ${min} characters`)
     .required('Password is required'),
   confirmPassword: yup
     .string()
