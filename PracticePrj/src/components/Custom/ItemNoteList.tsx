@@ -21,14 +21,14 @@ const ItemNoteList = (props: ItemNoteProps) => {
 
   const dispatch = useDispatch();
 
-  const deleteItem = () => {
-    console.log(props.index);
-    dispatch(
-      noteListSlice.actions.deleteNote({
-        index: props.index,
-      }),
-    );
-  };
+  // const deleteItem = () => {
+  //   console.log(props.index);
+  //   dispatch(
+  //     noteListSlice.actions.deleteNote({
+  //       index: props.index,
+  //     }),
+  //   );
+  // };
 
   // const updateItemList = (noteTitle: string) => {
   //   dispatch(
@@ -42,8 +42,8 @@ const ItemNoteList = (props: ItemNoteProps) => {
   //   hideInputDialog();
   // };
 
-  const updateNoteList = (noteTitle: string) => {
-    ref
+  const updateNoteList = async (noteTitle: string) => {
+    await ref
       .doc(props.id)
       .update({
         title: noteTitle,
@@ -54,8 +54,8 @@ const ItemNoteList = (props: ItemNoteProps) => {
     hideInputDialog();
   };
 
-  const removeItemNoteList = () => {
-    ref
+  const removeItemNoteList = async () => {
+    await ref
       .doc(props.id)
       .delete()
       .then(() => console.log('Deleted'));

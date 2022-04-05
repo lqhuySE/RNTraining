@@ -17,7 +17,7 @@ const InputDialog = (props: InputDialogProps) => {
 
   const onPositiveButtonClick = (text: string) => {
     if (text === '') {
-      Alert.alert('Warning', 'Name of folder is not emptied');
+      Alert.alert('Warning', 'Name of note is required');
     } else {
       setValue(text);
       props.positiveCallback(value);

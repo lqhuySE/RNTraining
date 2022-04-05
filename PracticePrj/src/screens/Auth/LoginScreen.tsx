@@ -1,15 +1,11 @@
-import React, {Component, useState} from 'react';
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import CustomInputField from '../../components/InputField/CustomInputField';
+import React, {Component} from 'react';
+import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import CustomBasicButton from '../../components/Button/CustomBasicButton';
 import CustomImageButton from '../../components/Button/CustomImageButton';
 import FirebaseAuthUtils from '../../utils/FirebaseUtils';
+import CustomInputFieldValidation from '../../components/InputField/CustomInputFieldValidation';
+import {Formik} from 'formik';
+import {signInValidationSchema} from '../../utils/ValidationUtils';
 
 type NavigationProps = {
   onClicked: (param: any) => void;
@@ -67,17 +63,10 @@ class LoginWithThirdParty extends Component {
 }
 
 export default function LoginScreen({navigation}: any) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const signIn = () => {
-    if (email === '' && password === '') {
-      Alert.alert('Warning', 'Please enter email and password');
-    } else {
-      FirebaseAuthUtils.signIn(email, password).catch(e => {
-        console.log(e);
-      });
-    }
+  const signIn = (email: string, password: string) => {
+    FirebaseAuthUtils.signIn(email, password).catch(e => {
+      console.log(e);
+    });
   };
 
   const goToSignUp = () => {
@@ -87,27 +76,44 @@ export default function LoginScreen({navigation}: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
-      <CustomInputField
-        headerTitle={'Email'}
-        valueTitle={email}
-        placeholder={'Please enter your email'}
-        multiline={false}
-        passwordType={false}
-        onTextChange={value => setEmail(value)}
-      />
-      <CustomInputField
-        headerTitle={'Password'}
-        valueTitle={password}
-        placeholder={'Please enter your password'}
-        multiline={false}
-        passwordType={true}
-        onTextChange={value => setPassword(value)}
-      />
-      <CustomBasicButton
-        title={'Login'}
-        active={true}
-        onClicked={() => signIn()}
-      />
+      <Formik
+        initialValues={{email: '', password: ''}}
+        validationSchema={signInValidationSchema}
+        onSubmit={values => signIn(values.email, values.password)}>
+        {props => {
+          return (
+            <View>
+              <CustomInputFieldValidation
+                header={'Email'}
+                value={props.values.email}
+                placeholder={'Please enter your email'}
+                multiline={false}
+                passwordType={false}
+                onTextChangeCallback={props.handleChange('email')}
+                onBlurCallback={props.handleBlur('email')}
+                error={props.errors.email}
+                touch={props.touched.email}
+              />
+              <CustomInputFieldValidation
+                header={'Password'}
+                value={props.values.password}
+                placeholder={'Please enter your password'}
+                multiline={false}
+                passwordType={true}
+                onTextChangeCallback={props.handleChange('password')}
+                onBlurCallback={props.handleBlur('password')}
+                error={props.errors.password}
+                touch={props.touched.password}
+              />
+              <CustomBasicButton
+                title={'Login'}
+                active={true}
+                onClicked={props.handleSubmit}
+              />
+            </View>
+          );
+        }}
+      </Formik>
       <View style={styles.textBottomContainer}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text>Don't have any account ? </Text>

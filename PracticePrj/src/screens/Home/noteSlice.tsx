@@ -5,7 +5,7 @@ export default createSlice({
   name: 'noteList',
   initialState: [] as INote[],
   reducers: {
-    addNoteList: (state, action) => {
+    createNoteList: (state, action) => {
       state.length = 0;
       state.push(action.payload);
     },

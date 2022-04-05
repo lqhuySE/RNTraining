@@ -15,13 +15,14 @@ import InputDialog from '../../components/Dialog/InputDialog';
 import FloatingActionButton from '../../components/Button/FloatingActionButton';
 import Color from '../../constants/Color';
 import {useDispatch, useSelector} from 'react-redux';
-//import {noteListSelector} from '../../redux/Selector';
 import uuid from 'react-native-uuid';
 import NoteList from '../../components/Flatlist/NoteList';
 import DateUtils from '../../utils/DateUtils';
-//import noteListSlice from './noteSlice';
 import firestore from '@react-native-firebase/firestore';
 import INote from '../../models/INote';
+import Indicator from '../../components/Indicator/ActivityIndicator';
+import noteSlice from './noteSlice';
+import {noteListSelector} from '../../redux/Selector';
 
 type ButtonProps = {
   onClicked: (param: any) => void;
@@ -62,6 +63,7 @@ class Header extends Component<ButtonProps> {
 export default function HomePage({navigation}: any) {
   const [isAlertDialogShow, setShowAlertDialog] = useState(false);
   const [isInputDialogShow, setShowInputDialog] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [list, setList] = useState<INote>([]);
 
   const ref = firestore().collection('users');
@@ -80,11 +82,16 @@ export default function HomePage({navigation}: any) {
         });
       });
       setList(listNote);
-      console.log(list);
-    });
-  }, [dispatch, list, ref]);
 
-  //const noteList = useSelector(noteListSelector);
+      if (loading) {
+        setLoading(false);
+      }
+    });
+  }, [list, loading, ref]);
+
+  // const noteList = useSelector(noteListSelector);
+  //
+  // console.log('this is note list' + noteList);
 
   const showAlertDialog = () => {
     setShowAlertDialog(true);
@@ -120,9 +127,9 @@ export default function HomePage({navigation}: any) {
   //   hideInputDialog();
   // };
 
-  const addNewNote = (noteTitle: string) => {
+  const addNewNote = async (noteTitle: string) => {
     let noteId: string = `${uuid.v4()}`;
-    ref.doc(`${noteId}`).set({
+    await ref.doc(`${noteId}`).set({
       title: noteTitle,
       time: DateUtils.getCurrentDateTime(),
       data: '',
@@ -159,6 +166,7 @@ export default function HomePage({navigation}: any) {
           }
         />
       </ScrollView>
+      {loading && <Indicator />}
       <AlertDialog
         isShown={isAlertDialogShow}
         title={'Logging out'}

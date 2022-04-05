@@ -60,7 +60,6 @@ const RootNavigator = () => {
   return (
     <RootStack.Navigator screenOptions={{headerShown: false}}>
       <RootStack.Screen name="Home" component={HomeScreen} />
-      {/*<RootStack.Screen name="Note" component={NoteScreen} />*/}
       <RootStack.Screen name="NoteDetail" component={NoteDetailScreen} />
     </RootStack.Navigator>
   );

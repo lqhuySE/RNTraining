@@ -1,8 +1,10 @@
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import CustomInputField from '../../components/InputField/CustomInputField';
 import CustomBasicButton from '../../components/Button/CustomBasicButton';
 import FirebaseAuthUtils from '../../utils/FirebaseUtils';
+import {Formik} from 'formik';
+import {signUpValidationSchema} from '../../utils/ValidationUtils';
+import CustomInputFieldValidation from '../../components/InputField/CustomInputFieldValidation';
 
 type NavigationProps = {
   onClicked: (param: any) => void;
@@ -21,11 +23,7 @@ class GoToSignIn extends Component<NavigationProps> {
 }
 
 export default function SignUpScreen({navigation}: any) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const signUp = () => {
+  const signUp = (email: string, password: string) => {
     FirebaseAuthUtils.signUp(email, password).catch(e => {
       console.log(e);
     });
@@ -38,35 +36,55 @@ export default function SignUpScreen({navigation}: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
-      <CustomInputField
-        headerTitle={'Email'}
-        valueTitle={email}
-        placeholder={'Please enter your email'}
-        multiline={false}
-        passwordType={false}
-        onTextChange={value => setEmail(value)}
-      />
-      <CustomInputField
-        headerTitle={'Password'}
-        valueTitle={password}
-        placeholder={'Please enter your password'}
-        multiline={false}
-        passwordType={true}
-        onTextChange={value => setPassword(value)}
-      />
-      <CustomInputField
-        headerTitle={'Confirm Password'}
-        valueTitle={confirmPassword}
-        placeholder={'Please enter your password'}
-        multiline={false}
-        passwordType={true}
-        onTextChange={value => setConfirmPassword(value)}
-      />
-      <CustomBasicButton
-        title={'Register'}
-        active={true}
-        onClicked={() => signUp()}
-      />
+      <Formik
+        initialValues={{email: '', password: '', confirmPassword: ''}}
+        validationSchema={signUpValidationSchema}
+        onSubmit={values => signUp(values.email, values.password)}>
+        {props => {
+          return (
+            <View>
+              <CustomInputFieldValidation
+                header={'Email'}
+                value={props.values.email}
+                placeholder={'Please enter your email'}
+                multiline={false}
+                passwordType={false}
+                onTextChangeCallback={props.handleChange('email')}
+                onBlurCallback={props.handleBlur('email')}
+                error={props.errors.email}
+                touch={props.touched.email}
+              />
+              <CustomInputFieldValidation
+                header={'Password'}
+                value={props.values.password}
+                placeholder={'Please enter your password'}
+                multiline={false}
+                passwordType={true}
+                onTextChangeCallback={props.handleChange('password')}
+                onBlurCallback={props.handleBlur('password')}
+                error={props.errors.password}
+                touch={props.touched.password}
+              />
+              <CustomInputFieldValidation
+                header={'Confirm password'}
+                value={props.values.confirmPassword}
+                placeholder={'Please enter your password again'}
+                multiline={false}
+                passwordType={true}
+                onTextChangeCallback={props.handleChange('confirmPassword')}
+                onBlurCallback={props.handleBlur('confirmPassword')}
+                error={props.errors.confirmPassword}
+                touch={props.touched.confirmPassword}
+              />
+              <CustomBasicButton
+                title={'Register'}
+                active={true}
+                onClicked={props.handleSubmit}
+              />
+            </View>
+          );
+        }}
+      </Formik>
       <View style={styles.textBottomContainer}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text>Have an account ? </Text>

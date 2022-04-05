@@ -7,6 +7,7 @@ import {
   Image,
   Text,
   TouchableWithoutFeedback,
+  Button,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
@@ -14,12 +15,20 @@ import noteListSlice from '../../screens/Home/noteSlice';
 import DateUtils from '../../utils/DateUtils';
 import Color from '../../constants/Color';
 import firestore from '@react-native-firebase/firestore';
+import {useForm} from 'react-hook-form';
 
 type NavigationProps = {
   title: string;
   onBackButtonClicked: (param: any) => void;
   onSaveButtonClicked: (param: any) => void;
 };
+
+interface IFormInput {
+  firstName: string;
+  lastName: string;
+  age: number;
+  example: string;
+}
 
 const HeaderNavigation = (props: NavigationProps) => {
   return (
@@ -65,8 +74,8 @@ const NoteDetailScreen = ({navigation}: any) => {
   //   );
   // };
 
-  const updateNoteDetail = () => {
-    ref
+  const updateNoteDetail = async () => {
+    await ref
       .doc(route.params.noteId)
       .update({
         title: title,
